@@ -1,6 +1,7 @@
 package com.example.TransportManagement.servieceImplements;
 
 import com.example.TransportManagement.Utill.JwtUtil;
+import com.example.TransportManagement.baseresponse.APIResponse;
 import com.example.TransportManagement.dto.RoleDto;
 import com.example.TransportManagement.dto.UserDTO;
 import com.example.TransportManagement.dto.UserRoleDto;
@@ -9,7 +10,6 @@ import com.example.TransportManagement.entity.User;
 import com.example.TransportManagement.entity.UserRole;
 import com.example.TransportManagement.repository.*;
 import com.example.TransportManagement.serviece.UserInterface;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,12 +54,12 @@ public class UserServieceImplements implements UserInterface {
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
         user.setPassword(bcrypt.encode(userDTO.getPassword()));
         userRepository.save(user);
-        saveRole(userDTO.getRoles(), user);
+        addRole(userDTO.getRoles(), user);
         return user;
 
     }
 
-    private void saveRole(List<RoleDto> roles, User userDetail) {
+    private void addRole(List<RoleDto> roles, User userDetail) {
         try {
             List<UserRole> userRoles = new LinkedList<>();
             if (Objects.nonNull(roles) && roles.size() > 0) {
@@ -80,20 +80,7 @@ public class UserServieceImplements implements UserInterface {
 
 
 
-    @Override
-    public Page<User> userpagination(int offset, int pageSize, String name) {
 
-        Pageable paging = PageRequest.of(offset,pageSize);
-        Page<User> users = userRepository.searchAllByNameLike("%" + name + "%",paging);
-
-        //APIResponse apiResponse = new APIResponse();
-        //apiResponse.setResponse(users);
-        //apiResponse.setRecordCount(users.getTotalPages());
-
-        return users;
-
-
-    }
 
     @Override
     public Optional<User> getuserById(int id) {
@@ -146,7 +133,7 @@ public class UserServieceImplements implements UserInterface {
     }
 
     @Override
-    public UserRoleDto logOfUser(UserRoleDto userRoleDTO) {
+    public UserRoleDto generateToken(UserRoleDto userRoleDTO) {
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
         List<Role> roles = new LinkedList<>();
         try {
@@ -171,11 +158,23 @@ public class UserServieceImplements implements UserInterface {
         return userRoleDTO;
     }
 
+    @Override
+    public APIResponse<User> pageUser(int offset, int pageSize, String name) {
+        Pageable paging = PageRequest.of(offset,pageSize);
+        Page<User> users = userRepository.searchAllByNameLike("%" + name + "%", paging);
+        APIResponse apiResponse = new APIResponse();
+        apiResponse.setResponse(users);
+        apiResponse.setRecordCount(users.getTotalPages());
+        return apiResponse;
+    }
+
+
+
     public UserDetails loadByUserName(String username) throws UsernameNotFoundException {
         Optional<User> userDetail = userRepository.findByName(username);
         List<Role> roles = new LinkedList<>();
         if (userDetail == null) {
-            throw new RuntimeException("USER NOT FOUND");
+            throw new RuntimeException("User not found");
         }
         else{
             List<UserRole> userRoles = userRoleRepository.findByUserId(userDetail.get().getId());
@@ -195,6 +194,8 @@ public class UserServieceImplements implements UserInterface {
         });
         return authorities;
     }
+
+
 
 
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Integer> {
 
 
-    Page<User> searchAllByNameLike(String s, Pageable paging);
+    
 
 
 
@@ -20,4 +20,5 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     Optional<User> findByName(String name);
 
 
+    Page<User> searchAllByNameLike(String s, Pageable paging);
 }

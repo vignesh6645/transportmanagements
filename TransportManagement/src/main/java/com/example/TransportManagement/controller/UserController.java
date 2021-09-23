@@ -32,18 +32,13 @@ public class UserController {
 
     @GetMapping(value = "/login")
     @ApiOperation(value = "user login ")
-    public BaseResponseRep<UserRoleDto> tokengenrate(@RequestBody UserRoleDto userRoleDTO) {
+    public BaseResponseRep<UserRoleDto> tokenGenerate(@RequestBody UserRoleDto userRoleDTO) {
         BaseResponseRep<UserRoleDto> base=null;
-        base = BaseResponseRep.<UserRoleDto>builder().Data(userInterface.logOfUser(userRoleDTO)).build();
+        base = BaseResponseRep.<UserRoleDto>builder().Data(userInterface.generateToken(userRoleDTO)).build();
         return base;
     }
 
-    @RolesAllowed(value = "USER")
-    @GetMapping("/{offset}/{pageSize}/{name}")
-    private APIResponse<User> getUserWithPagination
-            (@PathVariable int offset, @PathVariable int pageSize, @PathVariable String name) {
-        return (APIResponse<User>) userInterface.userpagination(offset, pageSize, name);
-    }
+
 
     @RolesAllowed(value="ADMIN")
     @PutMapping("/update")
@@ -70,4 +65,10 @@ public class UserController {
     }
 
 
+    @RolesAllowed(value = "USER")
+    @GetMapping("/{offset}/{pageSize}/{name}")
+  //  @ApiOperation(value = "userList", authorizations = {@Authorization(value = "Bearer")})
+    public APIResponse<User> getPagination(@PathVariable int offset,@PathVariable int pageSize, @PathVariable String name){
+        return userInterface.pageUser(offset, pageSize, name);
+    }
 }

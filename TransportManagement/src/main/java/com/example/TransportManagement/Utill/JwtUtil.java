@@ -1,8 +1,6 @@
 package com.example.TransportManagement.Utill;
 
 import com.example.TransportManagement.entity.Role;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -35,24 +33,6 @@ public class JwtUtil {
         return null;
     }
 
-    public List<Role> getRoleNameFromJWT(String token, String signingKey) {
-        Claims claims = Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody();
-        return (List<Role>) claims.get("Authorities");
-    }
-
-    public String convertObjectToJson(Object object) throws JsonProcessingException {
-        if (object == null) {
-            return null;
-        }
-        ObjectMapper mapper = new ObjectMapper();
-
-        return mapper.writeValueAsString(object);
-    }
-
-    public static String getUserIdFromJWT(String token, String signingKey) {
-        Claims claims = Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody();
-        return String.valueOf(claims.get("userId"));
-    }
 
     public boolean validateToken(String authToken,String signingKey) {
         try {
@@ -70,8 +50,5 @@ public class JwtUtil {
     }
 
 
-    public Object getRoleFromJWT(String token, String signingKey) {
-        Claims claims = Jwts.parser().setSigningKey(signingKey).parseClaimsJws(token).getBody();
-        return claims.get("roleName");
-    }
+
 }

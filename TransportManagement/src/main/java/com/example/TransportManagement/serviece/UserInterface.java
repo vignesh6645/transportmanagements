@@ -1,16 +1,18 @@
 package com.example.TransportManagement.serviece;
 
+import com.example.TransportManagement.baseresponse.APIResponse;
 import com.example.TransportManagement.dto.UserDTO;
 import com.example.TransportManagement.dto.UserRoleDto;
 import com.example.TransportManagement.entity.User;
-import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public interface UserInterface {
     User adduser(UserDTO userDTO);
 
-    Page<User> userpagination(int offset, int pageSize, String name);
+
 
     Optional<User> getuserById(int id);
 
@@ -18,5 +20,8 @@ public interface UserInterface {
 
     Optional<User> UpdateUser(UserDTO userDTO);
 
-   UserRoleDto logOfUser(UserRoleDto userRoleDTO);
+   UserRoleDto generateToken(UserRoleDto userRoleDTO);
+
+
+    APIResponse<User> pageUser(int offset, int pageSize, String name);
 }

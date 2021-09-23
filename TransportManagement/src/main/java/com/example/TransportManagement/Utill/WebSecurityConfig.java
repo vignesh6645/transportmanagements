@@ -2,10 +2,6 @@ package com.example.TransportManagement.Utill;
 
 import com.example.TransportManagement.security.JwtAuthenticationEntryPoint;
 import com.example.TransportManagement.security.JwtFilter;
-import com.example.TransportManagement.servieceImplements.LoadServieceImplements;
-import com.example.TransportManagement.servieceImplements.UserServieceImplements;
-import com.example.TransportManagement.servieceImplements.VehicleServieceImplements;
-import com.example.TransportManagement.servieceImplements.VehicleTypeServieceImplements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,17 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserServieceImplements userServiece;
-
-    @Autowired
-    private LoadServieceImplements loadServiece;
-
-    @Autowired
-    private VehicleServieceImplements vehicleServiece;
-
-    @Autowired
-    private VehicleTypeServieceImplements vehicleTypeServiece;
 
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
@@ -55,7 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors();
         http.csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler);
         http.authorizeRequests()
-                .antMatchers("/delete").permitAll()
+                .antMatchers("/user/create","/user/login").permitAll()
                 .anyRequest().authenticated().and().formLogin().permitAll();
 
         http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry());
