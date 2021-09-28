@@ -8,7 +8,10 @@ import com.example.TransportManagement.dto.UserRoleDto;
 import com.example.TransportManagement.entity.Role;
 import com.example.TransportManagement.entity.User;
 import com.example.TransportManagement.entity.UserRole;
-import com.example.TransportManagement.repository.*;
+import com.example.TransportManagement.repository.RoleRepository;
+import com.example.TransportManagement.repository.UserRepository;
+import com.example.TransportManagement.repository.UserRoleRepository;
+import com.example.TransportManagement.repository.VehicleRespository;
 import com.example.TransportManagement.serviece.UserInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,8 +36,6 @@ public class UserServieceImplements implements UserInterface {
     @Autowired
     private VehicleRespository vehicleRespository;
 
-    @Autowired
-    private VehicleTypeRepository vehicleTypeRepository;
 
     @Autowired
     private UserRoleRepository userRoleRepository;
@@ -42,24 +43,44 @@ public class UserServieceImplements implements UserInterface {
     @Autowired
     private RoleRepository roleRepository;
 
-    @Autowired
-    private LoadRepository loadRepository;
-
 
 
     @Override
-    public User adduser(UserDTO userDTO) {
+    public User adduser(UserDTO userDTO ) {
         User user = new User();
         user.setName(userDTO.getName());
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
         user.setPassword(bcrypt.encode(userDTO.getPassword()));
+
+       User finalUser = user;
+        userDTO.getRoles().forEach(roleDto -> {
+            Optional<Role> userRole1 = roleRepository.findById(roleDto.getId());
+
+        });
+
         userRepository.save(user);
         addRole(userDTO.getRoles(), user);
         return user;
 
     }
 
-    private void addRole(List<RoleDto> roles, User userDetail) {
+   /* public UserRole addRole(UserRoleDto userRoleDto){
+        UserRole userRole = new UserRole();
+        userRole.setId(userRoleDto.getId());
+
+        Optional<User> user = userRepository.findById(userRoleDto.getId());
+        user.ifPresent(userRole::setUser);
+
+        UserRole finalUserRole = userRole;
+        userRoleDto.getRoleList().forEach(userRole1 -> {
+            Optional<Role> role= roleRepository.findById(userRole1.getId());
+            user.ifPresent(finalUserRole::setUser);
+        });
+        userRoleRepository.save(userRole);
+        return userRole;
+    }*/
+
+   private void addRole(List<RoleDto> roles, User userDetail) {
         try {
             List<UserRole> userRoles = new LinkedList<>();
             if (Objects.nonNull(roles) && roles.size() > 0) {
@@ -80,8 +101,6 @@ public class UserServieceImplements implements UserInterface {
 
 
 
-
-
     @Override
     public Optional<User> getuserById(int id) {
 
@@ -89,8 +108,8 @@ public class UserServieceImplements implements UserInterface {
         return user;
     }
 
-    @Override
-    public Optional<User> deleteuser(UserDTO userDTO) {
+    /*@Override
+    public User deleteusers(UserDTO userDTO) {
         User user = new User();
         Optional<User> existUser=userRepository.findById(userDTO.getId());
         if (existUser.isPresent()){
@@ -106,8 +125,13 @@ public class UserServieceImplements implements UserInterface {
 
         return existUser;
 
+        User user = new User();
+        userRepository.deleteById(userDTO.getId());
 
-    }
+
+        return user;
+
+    }*/
 
     @Override
     public Optional<User> UpdateUser(UserDTO userDTO) {
@@ -136,6 +160,7 @@ public class UserServieceImplements implements UserInterface {
     public UserRoleDto generateToken(UserRoleDto userRoleDTO) {
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
         List<Role> roles = new LinkedList<>();
+
         try {
            Optional< User> user = userRepository.findByName(userRoleDTO.getName());
             boolean status = bcrypt.matches(userRoleDTO.getPassword(), user.get().getPassword());
@@ -168,7 +193,12 @@ public class UserServieceImplements implements UserInterface {
         return apiResponse;
     }
 
-
+    @Override
+    public User deletebyid(int id) {
+        User user = new User();
+        userRepository.deleteById(id);
+        return user;
+    }
 
     public UserDetails loadByUserName(String username) throws UsernameNotFoundException {
         Optional<User> userDetail = userRepository.findByName(username);

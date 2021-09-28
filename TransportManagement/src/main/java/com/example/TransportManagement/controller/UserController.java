@@ -56,19 +56,23 @@ public class UserController {
         return base;
     }
 
-    @RolesAllowed(value="ADMIN")
-    @PutMapping("/delete")
-    public BaseResponseRep<Optional<User>> deletesoft(@RequestBody UserDTO userDTO) {
-        BaseResponseRep<Optional<User>> base=null;
-        base=BaseResponseRep.<Optional<User>>builder().Data(userInterface.deleteuser(userDTO)).build();
-        return base ;
-    }
 
+  /* @RolesAllowed(value="USER")
+   @DeleteMapping("/delete/{id}")
+    public User delete(@PathVariable int id){
+        return userInterface.deleteUser(id);
+    }*/
 
     @RolesAllowed(value = "USER")
     @GetMapping("/{offset}/{pageSize}/{name}")
   //  @ApiOperation(value = "userList", authorizations = {@Authorization(value = "Bearer")})
     public APIResponse<User> getPagination(@PathVariable int offset,@PathVariable int pageSize, @PathVariable String name){
         return userInterface.pageUser(offset, pageSize, name);
+    }
+
+    @RolesAllowed("USER")
+    @DeleteMapping("/delete/{id}")
+    public User delete (@PathVariable int id){
+        return userInterface.deletebyid(id);
     }
 }

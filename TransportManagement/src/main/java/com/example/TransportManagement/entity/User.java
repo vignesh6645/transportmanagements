@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -16,10 +17,11 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "User_vg")
+@SQLDelete(sql = "UPDATE User_vg SET deleted = 1 WHERE id = ? ")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Integer id;
 
@@ -31,11 +33,11 @@ public class User {
 
 
 
-    @Column(name = "is_active",columnDefinition = "integer default 0")
-    private int isActive;
+   // @Column(name = "is_active",columnDefinition = "integer default 0")
+   // private int isActive;
 
-    @Column(name = "is_delete",columnDefinition = "integer default 0")
-    private int isDelete;
+   // @Column(name = "is_delete",columnDefinition = "integer default 0")
+    private int deleted;
 
     @CreationTimestamp
     @Column(name = "created_at")

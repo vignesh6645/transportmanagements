@@ -10,13 +10,14 @@ import java.util.Optional;
 
 @Service
 public interface UserInterface {
+
     User adduser(UserDTO userDTO);
 
 
 
     Optional<User> getuserById(int id);
 
-    Optional<User> deleteuser(UserDTO userDTO);
+    
 
     Optional<User> UpdateUser(UserDTO userDTO);
 
@@ -24,4 +25,9 @@ public interface UserInterface {
 
 
     APIResponse<User> pageUser(int offset, int pageSize, String name);
+
+    User deletebyid(int id);
+
+
+    // User deleteUser(int id);
 }
