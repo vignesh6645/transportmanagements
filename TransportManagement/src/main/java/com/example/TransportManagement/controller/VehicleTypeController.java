@@ -11,7 +11,6 @@ import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 
-
 @RestController
 @RequestMapping("/vehicleType")
 public class VehicleTypeController {
@@ -28,6 +27,15 @@ public class VehicleTypeController {
         return base;
     }
     @RolesAllowed(value = "USER")
+    @GetMapping("/getAll")
+    // @Authorization(value = "Bearer")
+    public BaseResponseRep<List<VehicleType>>listAll(){
+        BaseResponseRep<List<VehicleType>> base;
+        base = BaseResponseRep.<List<VehicleType>> builder().Data(vehicleTypeInterface.listAll()).build();
+        return base;
+    }
+
+    @RolesAllowed(value = "USER")
     @PutMapping("/update")
    // @Authorization(value = "Bearer")
     public BaseResponseRep updatedetail(@RequestBody VehicleTypeDTO vehicleTypeDTO){
@@ -37,21 +45,14 @@ public class VehicleTypeController {
     }
 
     @RolesAllowed(value = "USER")
-    @PutMapping("/delete")
+    @DeleteMapping("/delete/{id}")
    // @Authorization(value = "Bearer")
-    public BaseResponseRep deletedetail(@RequestBody VehicleTypeDTO vehicleTypeDTO){
+    public BaseResponseRep deletedetail(@PathVariable int id){
         BaseResponseRep base ;
-        base = BaseResponseRep.builder().Data(vehicleTypeInterface.deletevehicleType(vehicleTypeDTO)).build();
+        base = BaseResponseRep.builder().Data(vehicleTypeInterface.deletevehicleType(id)).build();
         return base;
     }
 
-    @RolesAllowed(value = "USER")
-    @GetMapping("/getAll")
-   // @Authorization(value = "Bearer")
-        public BaseResponseRep<List<VehicleType>>listAll(){
-            BaseResponseRep<List<VehicleType>> base;
-            base = BaseResponseRep.<List<VehicleType>> builder().Data(vehicleTypeInterface.listAll()).build();
-            return base;
-    }
+
 
 }

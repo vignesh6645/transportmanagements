@@ -3,6 +3,7 @@ package com.example.TransportManagement.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE vehicle SET is_delete = 1 WHERE id = ? ")
 @Entity
 @Table(name = "vehicle")
 public class Vehicle {

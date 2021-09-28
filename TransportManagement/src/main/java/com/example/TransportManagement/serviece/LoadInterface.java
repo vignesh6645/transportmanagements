@@ -11,7 +11,7 @@ public interface LoadInterface {
 
     Optional<Load> UpdateLoad(LoadDTO loadDTO);
 
-    Optional<Load> DeleteLoad(LoadDTO loadDTO);
+    Load DeleteLoad(int id);
 
     List<Load> ListAll1();
 }

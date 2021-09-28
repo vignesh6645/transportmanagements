@@ -17,11 +17,11 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "User_vg")
-@SQLDelete(sql = "UPDATE User_vg SET deleted = 1 WHERE id = ? ")
+@SQLDelete(sql = "UPDATE User_vg SET is_delete = 1 WHERE id = ? ")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private Integer id;
 
@@ -33,11 +33,11 @@ public class User {
 
 
 
-   // @Column(name = "is_active",columnDefinition = "integer default 0")
-   // private int isActive;
+    @Column(name = "is_active",columnDefinition = "integer default 0")
+    private int isActive;
 
-   // @Column(name = "is_delete",columnDefinition = "integer default 0")
-    private int deleted;
+    @Column(name = "is_delete",columnDefinition = "integer default 0")
+    private int isDelete;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -50,7 +50,7 @@ public class User {
     @OneToMany(mappedBy = "role")
     private List<UserRole> roles;
 
-    public User(User user)
+    public  User(User user)
     {
         this.id = user.getId();
         this.roles = user.getRoles();

@@ -15,7 +15,7 @@ public interface VehicleInterface {
 
     Optional<Vehicle> findvehicleById(int id);
 
-    Optional<Vehicle> deletevehicle(VehicleDTO vehicleDTO);
+    Vehicle deletevehicle(int id);
 
     APIResponse<Vehicle> vehiclePagination(int offset, int pageSize, String vehicleName);
 }

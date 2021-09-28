@@ -3,6 +3,7 @@ package com.example.TransportManagement.servieceImplements;
 import com.example.TransportManagement.dto.LoadDTO;
 import com.example.TransportManagement.entity.Load;
 import com.example.TransportManagement.entity.Vehicle;
+import com.example.TransportManagement.exception.ControllerExceptions;
 import com.example.TransportManagement.repository.LoadRepository;
 import com.example.TransportManagement.repository.UserRepository;
 import com.example.TransportManagement.repository.VehicleRespository;
@@ -46,7 +47,7 @@ public class LoadServieceImplements implements LoadInterface{
 
             }
             else {
-                throw new RuntimeException("Not found");
+                throw new ControllerExceptions("400","Type Valid info..");
             }
             Load obj = loadRepository.save(load);
 
@@ -64,7 +65,7 @@ public class LoadServieceImplements implements LoadInterface{
             existLoad.get().setDestination(loadDTO.getDestination());
         }
         else {
-            throw new RuntimeException("Not found");
+            throw new ControllerExceptions("404","No Details Found");
         }
         loadDTO.getVehicleId().forEach(vehicleDTO -> {
             Optional<Vehicle> vehicle = vehicleRespository.findById(vehicleDTO.getVehicle_id());
@@ -73,7 +74,7 @@ public class LoadServieceImplements implements LoadInterface{
                 existLoad.get().setVehicle(vehicle.get());
             }
             else {
-                throw new RuntimeException("Not found");
+                throw new ControllerExceptions("404","No Details Found");
             }
             Load obj1 = loadRepository.save(existLoad.get());
 
@@ -82,18 +83,12 @@ public class LoadServieceImplements implements LoadInterface{
     }
 
     @Override
-    public Optional<Load> DeleteLoad(LoadDTO loadDTO) {
+    public Load DeleteLoad(int id) {
 
-        Optional<Load> existLoad = loadRepository.findById(loadDTO.getLoad_id());
-        if (existLoad.isPresent()){
+        Load load= new Load();
+        loadRepository.deleteById(id);
+        return load;
 
-            existLoad.get().setIsDelete(1);
-            Load obj3 = loadRepository.save(existLoad.get());
-        }
-        else {
-            throw new RuntimeException("Not found");
-        }
-        return existLoad;
     }
 
     @Override

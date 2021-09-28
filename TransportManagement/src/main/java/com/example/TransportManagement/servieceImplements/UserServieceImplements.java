@@ -8,6 +8,7 @@ import com.example.TransportManagement.dto.UserRoleDto;
 import com.example.TransportManagement.entity.Role;
 import com.example.TransportManagement.entity.User;
 import com.example.TransportManagement.entity.UserRole;
+import com.example.TransportManagement.exception.ControllerExceptions;
 import com.example.TransportManagement.repository.RoleRepository;
 import com.example.TransportManagement.repository.UserRepository;
 import com.example.TransportManagement.repository.UserRoleRepository;
@@ -52,11 +53,7 @@ public class UserServieceImplements implements UserInterface {
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
         user.setPassword(bcrypt.encode(userDTO.getPassword()));
 
-       User finalUser = user;
-        userDTO.getRoles().forEach(roleDto -> {
-            Optional<Role> userRole1 = roleRepository.findById(roleDto.getId());
 
-        });
 
         userRepository.save(user);
         addRole(userDTO.getRoles(), user);
@@ -64,21 +61,6 @@ public class UserServieceImplements implements UserInterface {
 
     }
 
-   /* public UserRole addRole(UserRoleDto userRoleDto){
-        UserRole userRole = new UserRole();
-        userRole.setId(userRoleDto.getId());
-
-        Optional<User> user = userRepository.findById(userRoleDto.getId());
-        user.ifPresent(userRole::setUser);
-
-        UserRole finalUserRole = userRole;
-        userRoleDto.getRoleList().forEach(userRole1 -> {
-            Optional<Role> role= roleRepository.findById(userRole1.getId());
-            user.ifPresent(finalUserRole::setUser);
-        });
-        userRoleRepository.save(userRole);
-        return userRole;
-    }*/
 
    private void addRole(List<RoleDto> roles, User userDetail) {
         try {
@@ -86,7 +68,7 @@ public class UserServieceImplements implements UserInterface {
             if (Objects.nonNull(roles) && roles.size() > 0) {
                 roles.stream().forEachOrdered(role -> {
                     Role role1 = roleRepository.findById(role.getId())
-                            .orElseThrow(() -> new RuntimeException("role is not here"));
+                            .orElseThrow(() -> new ControllerExceptions("404","Role is not found here"));
                     UserRole userRole = new UserRole();
                     userRole.setUser(userDetail);
                     userRole.setRole(role1);
@@ -94,8 +76,8 @@ public class UserServieceImplements implements UserInterface {
                 });
                 userRoleRepository.saveAll(userRoles);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NoSuchElementException e) {
+           throw new ControllerExceptions("901","Something went wrong!!! ");
         }
     }
 
@@ -108,46 +90,20 @@ public class UserServieceImplements implements UserInterface {
         return user;
     }
 
-    /*@Override
-    public User deleteusers(UserDTO userDTO) {
-        User user = new User();
-        Optional<User> existUser=userRepository.findById(userDTO.getId());
-        if (existUser.isPresent()){
 
-            existUser.get().setIsDelete(1);
-        }
-        else {
-            throw new RuntimeException("Not found");
-        }
-
-
-        User obj =userRepository.save(existUser.get());
-
-        return existUser;
-
-        User user = new User();
-        userRepository.deleteById(userDTO.getId());
-
-
-        return user;
-
-    }*/
 
     @Override
     public Optional<User> UpdateUser(UserDTO userDTO) {
 
         Optional<User> existUser = userRepository.findById(userDTO.getId());
         if(existUser.isPresent()){
-
-           // existUser.get().setId(userDTO.getId());
             existUser.get().setName(userDTO.getName());
             BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-           // existUser.setPassword(bcrypt.encode(userDTO.getPassword()));
             existUser.get().setPassword(bcrypt.encode(userDTO.getPassword()));
 
         }
         else {
-            throw new RuntimeException("Not found");
+            throw new ControllerExceptions("901","Something went wrong!!! ");
         }
 
         userRepository.save(existUser.get());
@@ -176,20 +132,25 @@ public class UserServieceImplements implements UserInterface {
                 userRoleDTO.setId(user.get().getId());
                 userRoleDTO.setRoleList(user.get().getRoles());
                 userRoleDTO.setJwtToken(Token);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            }else throw  new ControllerExceptions("404","User details Not found ");
+        } catch (NoSuchElementException e) {
+            throw new ControllerExceptions("401","Unauthorized access!!! ");
+
         }
         return userRoleDTO;
     }
 
     @Override
     public APIResponse<User> pageUser(int offset, int pageSize, String name) {
-        Pageable paging = PageRequest.of(offset,pageSize);
-        Page<User> users = userRepository.searchAllByNameLike("%" + name + "%", paging);
         APIResponse apiResponse = new APIResponse();
-        apiResponse.setResponse(users);
-        apiResponse.setRecordCount(users.getTotalPages());
+        try {
+            Pageable paging = PageRequest.of(offset, pageSize);
+            Page<User> users = userRepository.searchAllByNameLike("%" + name + "%", paging);
+            apiResponse.setResponse(users);
+            apiResponse.setRecordCount(users.getTotalPages());
+        } catch (NoSuchElementException e) {
+            throw new ControllerExceptions("404", "No details found");
+        }
         return apiResponse;
     }
 
@@ -204,7 +165,7 @@ public class UserServieceImplements implements UserInterface {
         Optional<User> userDetail = userRepository.findByName(username);
         List<Role> roles = new LinkedList<>();
         if (userDetail == null) {
-            throw new RuntimeException("User not found");
+            throw new ControllerExceptions("404","User details Not Found..");
         }
         else{
             List<UserRole> userRoles = userRoleRepository.findByUserId(userDetail.get().getId());

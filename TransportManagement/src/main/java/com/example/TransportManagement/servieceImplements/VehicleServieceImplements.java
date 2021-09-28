@@ -5,6 +5,7 @@ import com.example.TransportManagement.dto.VehicleDTO;
 import com.example.TransportManagement.entity.User;
 import com.example.TransportManagement.entity.Vehicle;
 import com.example.TransportManagement.entity.VehicleType;
+import com.example.TransportManagement.exception.ControllerExceptions;
 import com.example.TransportManagement.repository.LoadRepository;
 import com.example.TransportManagement.repository.UserRepository;
 import com.example.TransportManagement.repository.VehicleRespository;
@@ -70,7 +71,7 @@ public class VehicleServieceImplements  implements VehicleInterface {
             existVehicle.get().setRegistrationNumber(vehicleDTO.getRegistrationNumber());
         }
         else {
-            throw new RuntimeException("Not found");
+            throw new ControllerExceptions("404","There is no vehicle here!! "  );
         }
 
 
@@ -81,7 +82,7 @@ public class VehicleServieceImplements  implements VehicleInterface {
             existVehicle.get().setVehicle_type_id(vehicleType.get());
         }
         else {
-            throw new RuntimeException("Not found");
+            throw new ControllerExceptions("404","Vehicle is not found");
         }
         vehicleDTO.getUserId().forEach(userDTO -> {
             Optional<User> user = userRepository.findById(userDTO.getId());
@@ -90,7 +91,7 @@ public class VehicleServieceImplements  implements VehicleInterface {
                 existVehicle.get().setUser(user.get());
             }
             else {
-                throw new RuntimeException("Not found");
+                throw new ControllerExceptions("404","vehicle is not found");
             }
         });
        Vehicle obj= vehicleRespository.save(existVehicle.get());
@@ -119,18 +120,11 @@ public class VehicleServieceImplements  implements VehicleInterface {
     }
 
     @Override
-    public Optional<Vehicle> deletevehicle(VehicleDTO vehicleDTO) {
-
-        Optional<Vehicle> existVehicle = vehicleRespository.findById(vehicleDTO.getVehicle_id());
-        if (existVehicle.isPresent()){
-
-            existVehicle.get().setIsDelete(1);
-        }
-
-         Vehicle obj=vehicleRespository.save(existVehicle.get());
-
-        return existVehicle;
+    public Vehicle deletevehicle(int id) {
 
 
+        Vehicle vehicle = new Vehicle();
+        vehicleRespository.deleteById(id);
+        return vehicle;
     }
 }

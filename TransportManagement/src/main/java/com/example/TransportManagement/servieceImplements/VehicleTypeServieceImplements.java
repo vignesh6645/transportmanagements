@@ -2,6 +2,7 @@ package com.example.TransportManagement.servieceImplements;
 
 import com.example.TransportManagement.dto.VehicleTypeDTO;
 import com.example.TransportManagement.entity.VehicleType;
+import com.example.TransportManagement.exception.ControllerExceptions;
 import com.example.TransportManagement.repository.LoadRepository;
 import com.example.TransportManagement.repository.UserRepository;
 import com.example.TransportManagement.repository.VehicleRespository;
@@ -52,7 +53,7 @@ public class VehicleTypeServieceImplements implements VehicleTypeInterface {
             existVehicleType.get().setVehicleTypeName(vehicleTypeDTO.getVehicleTypeName());
         }
         else {
-            throw new RuntimeException("Not found");
+            throw new ControllerExceptions("404","No details found");
         }
 
         VehicleType obj = vehicleTypeRepository.save(existVehicleType.get());
@@ -60,20 +61,11 @@ public class VehicleTypeServieceImplements implements VehicleTypeInterface {
     }
 
     @Override
-    public Optional<VehicleType> deletevehicleType(VehicleTypeDTO vehicleTypeDTO) {
+    public VehicleType deletevehicleType(int id) {
 
-        Optional<VehicleType> existVehicleType=vehicleTypeRepository.findById(vehicleTypeDTO.getVehicle_type_id());
-        if (existVehicleType.isPresent()){
-
-            existVehicleType.get().setIsDelete(1);
-            VehicleType obj = vehicleTypeRepository.save(existVehicleType.get());
-        }
-        else {
-            throw new RuntimeException("Not found");
-        }
-
-        return existVehicleType;
-
+        VehicleType vehicleType = new VehicleType();
+        vehicleTypeRepository.deleteById(id);
+        return vehicleType;
     }
 
     @Override

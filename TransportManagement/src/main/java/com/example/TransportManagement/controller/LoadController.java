@@ -29,6 +29,15 @@ public class LoadController {
         return base;
     }
 
+    @RolesAllowed(value = "USER")
+    @GetMapping("/getAll")
+    // @Authorization(value = "Bearer")
+    public BaseResponseRep<List<Load>>listAll(){
+        BaseResponseRep<List<Load>> base;
+        base = BaseResponseRep.<List<Load>> builder().Data(loadInterface.ListAll1()).build();
+        return base;
+    }
+
     @RolesAllowed(value = "ADMIN")
     @PutMapping("/update")
    // @Authorization(value = "Bearer")
@@ -39,21 +48,14 @@ public class LoadController {
     }
 
     @RolesAllowed(value = "USER")
-    @PutMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     //@Authorization(value = "Bearer")
-    public BaseResponseRep<Optional<Load>> deleteLoad(@RequestBody LoadDTO loadDTO){
-        BaseResponseRep <Optional<Load>>base ;
-        base = BaseResponseRep.<Optional<Load>>builder().Data(loadInterface.DeleteLoad(loadDTO)).build();
+    public BaseResponseRep<Load> deleteLoad(@PathVariable int id){
+        BaseResponseRep <Load>base ;
+        base = BaseResponseRep.<Load>builder().Data(loadInterface.DeleteLoad(id)).build();
         return base;
     }
 
-    @RolesAllowed(value = "USER")
-    @GetMapping("/getAll")
-   // @Authorization(value = "Bearer")
-    public BaseResponseRep<List<Load>>listAll(){
-        BaseResponseRep<List<Load>> base;
-        base = BaseResponseRep.<List<Load>> builder().Data(loadInterface.ListAll1()).build();
-        return base;
-    }
+
 
 }

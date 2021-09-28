@@ -11,7 +11,7 @@ public interface VehicleTypeInterface {
 
     Optional<VehicleType> updatevehicleType(VehicleTypeDTO vehicleTypeDTO);
 
-    Optional<VehicleType> deletevehicleType(VehicleTypeDTO vehicleTypeDTO);
+    VehicleType deletevehicleType(int id);
 
 
 
