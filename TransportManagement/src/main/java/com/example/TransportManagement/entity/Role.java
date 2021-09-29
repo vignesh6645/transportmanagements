@@ -17,6 +17,7 @@ public class Role {
     @Column(name = "id")
     private Integer id;
 
+
     @Column(name = "role_name", nullable = false)
     private String roleName;
 

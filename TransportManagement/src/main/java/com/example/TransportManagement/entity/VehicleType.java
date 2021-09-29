@@ -15,13 +15,13 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE vehicleType SET is_delete = 1 WHERE id = ? ")
+@SQLDelete(sql = "UPDATE vehicleType SET is_delete = 1 WHERE vehicle_type_id = ? ")
 @Entity
 @Table(name = "vehicleType")
 public class VehicleType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "vehicle_type_id")
     private Integer vehicle_type_id;
 

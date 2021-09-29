@@ -17,11 +17,11 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "User_vg")
-@SQLDelete(sql = "UPDATE User_vg SET is_delete = 1 WHERE id = ? ")
+@SQLDelete(sql = "UPDATE User_vg SET is_delete = 1 WHERE user_id = ? ")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Integer id;
 

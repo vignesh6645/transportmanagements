@@ -21,6 +21,4 @@ public class ControllerExceptions  extends RuntimeException{
         this.errorCode=errorCode;
         this.errorMsg=errorMsg;
     }
-
-
 }

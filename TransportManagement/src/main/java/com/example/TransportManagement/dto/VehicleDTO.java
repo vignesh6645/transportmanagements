@@ -1,6 +1,5 @@
 package com.example.TransportManagement.dto;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +10,7 @@ import java.util.List;
 @Setter
 public class VehicleDTO {
 
-    private  int vehicle_id;
+    private  Integer vehicle_id;
 
     private String vehicleName;
 

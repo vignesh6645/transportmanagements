@@ -65,9 +65,10 @@ public class UserController {
 
     @RolesAllowed("USER")
     @DeleteMapping("/delete/{id}")
-    public BaseResponseRep<User>  delete (@PathVariable int id){
+    public String delete (@PathVariable int id){
         BaseResponseRep<User> baseResponseRep=null;
         baseResponseRep= BaseResponseRep.<User>builder().Data(userInterface.deletebyid(id)).build();
-        return baseResponseRep;
+        return "Success";
     }
+
 }

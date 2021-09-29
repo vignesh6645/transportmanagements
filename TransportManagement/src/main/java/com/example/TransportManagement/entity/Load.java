@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE loads SET is_delete = 1 WHERE id = ? ")
+@SQLDelete(sql = "UPDATE loads SET is_delete = 1 WHERE load_id = ? ")
 @Table(name = "loads")
 public class Load {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "load_id")
     private Integer load_id;
 
