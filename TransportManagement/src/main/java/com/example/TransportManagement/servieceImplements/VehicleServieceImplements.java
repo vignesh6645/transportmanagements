@@ -6,7 +6,6 @@ import com.example.TransportManagement.entity.User;
 import com.example.TransportManagement.entity.Vehicle;
 import com.example.TransportManagement.entity.VehicleType;
 import com.example.TransportManagement.exception.ControllerExceptions;
-import com.example.TransportManagement.repository.LoadRepository;
 import com.example.TransportManagement.repository.UserRepository;
 import com.example.TransportManagement.repository.VehicleRespository;
 import com.example.TransportManagement.repository.VehicleTypeRepository;
@@ -31,9 +30,6 @@ public class VehicleServieceImplements  implements VehicleInterface {
 
     @Autowired
     private VehicleTypeRepository vehicleTypeRepository;
-
-    @Autowired
-    private LoadRepository loadRepository;
 
     @Override
     public Vehicle addvehicle(VehicleDTO vehicleDTO) {

@@ -3,9 +3,6 @@ package com.example.TransportManagement.servieceImplements;
 import com.example.TransportManagement.dto.VehicleTypeDTO;
 import com.example.TransportManagement.entity.VehicleType;
 import com.example.TransportManagement.exception.ControllerExceptions;
-import com.example.TransportManagement.repository.LoadRepository;
-import com.example.TransportManagement.repository.UserRepository;
-import com.example.TransportManagement.repository.VehicleRespository;
 import com.example.TransportManagement.repository.VehicleTypeRepository;
 import com.example.TransportManagement.serviece.VehicleTypeInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +15,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class VehicleTypeServieceImplements implements VehicleTypeInterface {
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private VehicleRespository vehicleRespository;
 
     @Autowired
     private VehicleTypeRepository vehicleTypeRepository;
-
-    @Autowired
-    private LoadRepository loadRepository;
 
 
     @Override

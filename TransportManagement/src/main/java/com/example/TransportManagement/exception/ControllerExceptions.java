@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ControllerExceptions  extends RuntimeException{
 
-   // private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private String errorCode;
     private String errorMsg;
 

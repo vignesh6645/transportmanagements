@@ -5,9 +5,7 @@ import com.example.TransportManagement.entity.Load;
 import com.example.TransportManagement.entity.Vehicle;
 import com.example.TransportManagement.exception.ControllerExceptions;
 import com.example.TransportManagement.repository.LoadRepository;
-import com.example.TransportManagement.repository.UserRepository;
 import com.example.TransportManagement.repository.VehicleRespository;
-import com.example.TransportManagement.repository.VehicleTypeRepository;
 import com.example.TransportManagement.serviece.LoadInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,13 +19,7 @@ import java.util.Optional;
 public class LoadServieceImplements implements LoadInterface{
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private VehicleRespository vehicleRespository;
-
-    @Autowired
-    private VehicleTypeRepository vehicleTypeRepository;
 
     @Autowired
     private LoadRepository loadRepository;

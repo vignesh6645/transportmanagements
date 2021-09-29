@@ -56,13 +56,6 @@ public class UserController {
         return base;
     }
 
-
-  /* @RolesAllowed(value="USER")
-   @DeleteMapping("/delete/{id}")
-    public User delete(@PathVariable int id){
-        return userInterface.deleteUser(id);
-    }*/
-
     @RolesAllowed(value = "USER")
     @GetMapping("/{offset}/{pageSize}/{name}")
   //  @ApiOperation(value = "userList", authorizations = {@Authorization(value = "Bearer")})
@@ -72,7 +65,9 @@ public class UserController {
 
     @RolesAllowed("USER")
     @DeleteMapping("/delete/{id}")
-    public User delete (@PathVariable int id){
-        return userInterface.deletebyid(id);
+    public BaseResponseRep<User>  delete (@PathVariable int id){
+        BaseResponseRep<User> baseResponseRep=null;
+        baseResponseRep= BaseResponseRep.<User>builder().Data(userInterface.deletebyid(id)).build();
+        return baseResponseRep;
     }
 }
