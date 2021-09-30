@@ -52,7 +52,7 @@ public class LoadController {
     //@Authorization(value = "Bearer")
     public String<Load> deleteLoad(@PathVariable int id){
         loadInterface.DeleteLoad(id);
-        return "Success;
+        return "Success";
     }
 
 
