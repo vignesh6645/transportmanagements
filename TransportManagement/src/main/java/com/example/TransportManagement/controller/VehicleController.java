@@ -56,9 +56,10 @@ public class VehicleController {
     @RolesAllowed(value = "USER")
     @DeleteMapping("/delete/{id}")
    // @Authorization(value = "Bearer")
-    public String deleteLoad(@PathVariable int id){
-        vehicleInterface.deletevehicle(id);
-        return "Success";
+    public BaseResponseRep deleteLoad(@PathVariable int id){
+        BaseResponseRep base ;
+        base = BaseResponseRep.builder().Data(vehicleInterface.deletevehicle(id)).build();
+        return base;
     }
 
 }

@@ -31,8 +31,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-
-
     @Column(name = "is_active",columnDefinition = "integer default 0")
     private int isActive;
 
@@ -47,13 +45,17 @@ public class User {
     @Column(name = "modified_at")
     private LocalDateTime updateDateTime;
 
-    @OneToMany(mappedBy = "role")
-    private List<UserRole> roles;
+    @OneToMany(cascade = {CascadeType.ALL}   )
+    @JoinTable(name = "userrole",joinColumns = {@JoinColumn
+            (name = "user_id_fk",referencedColumnName = "user_id")}
+            ,inverseJoinColumns = {@JoinColumn(name = "role_id_fk",referencedColumnName = "id")}
+    )
+    private List<Role> listOfRole;
 
     public  User(User user)
     {
         this.id = user.getId();
-        this.roles = user.getRoles();
+        this.listOfRole = user.getListOfRole();
         this.name = user.getName();
     }
 }

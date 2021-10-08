@@ -22,6 +22,11 @@ public class Role {
     private String roleName;
 
 
+   /* @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinTable(name = "userrole",
+           joinColumns = {@JoinColumn(name = "user_id_fk")},
+           inverseJoinColumns = {@JoinColumn(name = "role_id_fk")})
+    private User user;*/
 
 
 }

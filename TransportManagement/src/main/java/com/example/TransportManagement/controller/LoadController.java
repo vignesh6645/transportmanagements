@@ -50,9 +50,10 @@ public class LoadController {
     @RolesAllowed(value = "USER")
     @DeleteMapping("/delete/{id}")
     //@Authorization(value = "Bearer")
-    public String<Load> deleteLoad(@PathVariable int id){
-        loadInterface.DeleteLoad(id);
-        return "Success";
+    public BaseResponseRep<Load> deleteLoad(@PathVariable int id){
+        BaseResponseRep <Load>base ;
+        base = BaseResponseRep.<Load>builder().Data(loadInterface.DeleteLoad(id)).build();
+        return base;
     }
 
 

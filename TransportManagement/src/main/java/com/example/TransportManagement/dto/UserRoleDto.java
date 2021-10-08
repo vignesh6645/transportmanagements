@@ -1,9 +1,6 @@
 package com.example.TransportManagement.dto;
-import com.example.TransportManagement.entity.UserRole;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -18,7 +15,7 @@ public class UserRoleDto {
 
     private String password;
 
-    private List<UserRole> roleList;
+   // private List<UserRole> roleList;
 
 
 }

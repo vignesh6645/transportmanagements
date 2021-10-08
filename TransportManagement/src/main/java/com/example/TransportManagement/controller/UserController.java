@@ -24,8 +24,8 @@ public class UserController {
 
 
     @PostMapping(value="/create")
-    public BaseResponseRep<User> Saveuser(@RequestBody UserDTO userDTO){
-        BaseResponseRep<User> base=null;
+    public BaseResponseRep<User> SaveUser(@RequestBody UserDTO userDTO){
+        BaseResponseRep<User> base;
         base = BaseResponseRep.<User>builder().Data(userInterface.adduser(userDTO)).build();
         return base;
     }
@@ -33,17 +33,15 @@ public class UserController {
     @GetMapping(value = "/login")
     @ApiOperation(value = "user login ")
     public BaseResponseRep<UserRoleDto> tokenGenerate(@RequestBody UserRoleDto userRoleDTO) {
-        BaseResponseRep<UserRoleDto> base=null;
+        BaseResponseRep<UserRoleDto> base;
         base = BaseResponseRep.<UserRoleDto>builder().Data(userInterface.generateToken(userRoleDTO)).build();
         return base;
     }
 
-
-
-    @RolesAllowed(value="ADMIN")
+    @RolesAllowed(value="USER")
     @PutMapping("/update")
-    public BaseResponseRep<Optional<User>> updateuser(@Valid @RequestBody UserDTO userDTO) {
-        BaseResponseRep<Optional<User>> base=null;
+    public BaseResponseRep<Optional<User>> updateUser(@Valid @RequestBody UserDTO userDTO) {
+        BaseResponseRep<Optional<User>> base;
         base=BaseResponseRep.<Optional<User>>builder().Data(userInterface.UpdateUser(userDTO)).build();
         return base ;
     }
@@ -51,7 +49,7 @@ public class UserController {
     @RolesAllowed(value="USER")
     @GetMapping("/{id}")
     public BaseResponseRep<Optional<User>> FindById(@PathVariable int id)  {
-        BaseResponseRep<Optional<User>> base=null;
+        BaseResponseRep<Optional<User>> base;
         base =BaseResponseRep.<Optional<User>>builder().Data(userInterface.getuserById(id)).build();
         return base;
     }
@@ -66,6 +64,8 @@ public class UserController {
     @RolesAllowed("USER")
     @DeleteMapping("/delete/{id}")
     public String delete (@PathVariable int id){
+       // BaseResponseRep<User> baseResponseRep;
+      //  baseResponseRep= BaseResponseRep.<User>builder().Data(userInterface.deletebyid(id)).build();
         userInterface.deletebyid(id);
         return "Success";
     }

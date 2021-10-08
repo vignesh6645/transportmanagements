@@ -2,16 +2,13 @@ package com.example.TransportManagement.servieceImplements;
 
 import com.example.TransportManagement.Utill.JwtUtil;
 import com.example.TransportManagement.baseresponse.APIResponse;
-import com.example.TransportManagement.dto.RoleDto;
 import com.example.TransportManagement.dto.UserDTO;
 import com.example.TransportManagement.dto.UserRoleDto;
 import com.example.TransportManagement.entity.Role;
 import com.example.TransportManagement.entity.User;
-import com.example.TransportManagement.entity.UserRole;
 import com.example.TransportManagement.exception.ControllerExceptions;
 import com.example.TransportManagement.repository.RoleRepository;
 import com.example.TransportManagement.repository.UserRepository;
-import com.example.TransportManagement.repository.UserRoleRepository;
 import com.example.TransportManagement.repository.VehicleRespository;
 import com.example.TransportManagement.serviece.UserInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +34,6 @@ public class UserServieceImplements implements UserInterface {
     @Autowired
     private VehicleRespository vehicleRespository;
 
-
-    @Autowired
-    private UserRoleRepository userRoleRepository;
-
     @Autowired
     private RoleRepository roleRepository;
 
@@ -52,36 +45,16 @@ public class UserServieceImplements implements UserInterface {
         user.setName(userDTO.getName());
         BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
         user.setPassword(bcrypt.encode(userDTO.getPassword()));
-
-
-
+        List<Role> roleList=new LinkedList<>();
+        userDTO.getRoles().forEach(role -> {
+            Role role1= new Role();
+            role1.setRoleName(role.getRoleName());
+            roleList.add(role1);
+        });
+        user.setListOfRole(roleList);
         userRepository.save(user);
-        addRole(userDTO.getRoles(), user);
         return user;
-
     }
-
-
-   private void addRole(List<RoleDto> roles, User userDetail) {
-        try {
-            List<UserRole> userRoles = new LinkedList<>();
-            if (Objects.nonNull(roles) && roles.size() > 0) {
-                roles.stream().forEachOrdered(role -> {
-                    Role role1 = roleRepository.findById(role.getId())
-                            .orElseThrow(() -> new ControllerExceptions("404","Role is not found here"));
-                    UserRole userRole = new UserRole();
-                    userRole.setUser(userDetail);
-                    userRole.setRole(role1);
-                    userRoles.add(userRole);
-                });
-                userRoleRepository.saveAll(userRoles);
-            }
-        } catch (NoSuchElementException e) {
-           throw new ControllerExceptions("901","Something went wrong!!! ");
-        }
-    }
-
-
 
     @Override
     public Optional<User> getuserById(int id) {
@@ -89,8 +62,6 @@ public class UserServieceImplements implements UserInterface {
        Optional<User>user=userRepository.findById(id);
         return user;
     }
-
-
 
     @Override
     public Optional<User> UpdateUser(UserDTO userDTO) {
@@ -101,6 +72,14 @@ public class UserServieceImplements implements UserInterface {
             BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
             existUser.get().setPassword(bcrypt.encode(userDTO.getPassword()));
 
+            List<Role> roleList= new LinkedList<>();
+            userDTO.getRoles().forEach(role -> {
+                Role role1 = roleRepository.findById(role.getId()).orElse(null);
+                role1.setRoleName(role.getRoleName());
+                roleList.add(role1);
+
+            });
+            existUser.get().setListOfRole(roleList);
         }
         else {
             throw new ControllerExceptions("901","Something went wrong!!! ");
@@ -108,7 +87,6 @@ public class UserServieceImplements implements UserInterface {
 
         userRepository.save(existUser.get());
         return existUser;
-
 
     }
 
@@ -118,28 +96,30 @@ public class UserServieceImplements implements UserInterface {
         List<Role> roles = new LinkedList<>();
 
         try {
-           Optional< User> user = userRepository.findByName(userRoleDTO.getName());
+            Optional<User> user = userRepository.findByName(userRoleDTO.getName());
             boolean status = bcrypt.matches(userRoleDTO.getPassword(), user.get().getPassword());
             if (user.isPresent() && status == true) {
-                List<UserRole> userRoles = userRoleRepository.findByUserId(user.get().getId());
-                userRoles.stream().forEachOrdered(userRole -> {
-                    Role role = userRole.getRole();
+
+                user.get().getListOfRole().forEach(role -> {
+                    Role role1 = new Role();
+                    role1.setRoleName(role.getRoleName());
                     roles.add(role);
                 });
-                String Token = JwtUtil.generateToken("secret",
-                        user.get().getId(), "user", user.get().getName(), roles);
+
+                String Token = JwtUtil
+                        .generateToken("secret",
+                                user.get().getId(),"user",user.get().getName(),roles);
                 userRoleDTO.setName(user.get().getName());
                 userRoleDTO.setId(user.get().getId());
-                userRoleDTO.setRoleList(user.get().getRoles());
                 userRoleDTO.setJwtToken(Token);
-            }else throw  new ControllerExceptions("404","User details Not found ");
-        } catch (NoSuchElementException e) {
-            throw new ControllerExceptions("401","Unauthorized access!!! ");
 
+            }
+
+        }catch (NoSuchElementException e){
+            throw new  ControllerExceptions("401","Unauthorized access!!! ");
         }
         return userRoleDTO;
     }
-
     @Override
     public APIResponse<User> pageUser(int offset, int pageSize, String name) {
         APIResponse apiResponse = new APIResponse();
@@ -168,11 +148,13 @@ public class UserServieceImplements implements UserInterface {
             throw new ControllerExceptions("404","User details Not Found..");
         }
         else{
-            List<UserRole> userRoles = userRoleRepository.findByUserId(userDetail.get().getId());
-            userRoles.stream().forEachOrdered(userRole -> {
-                Role role = userRole.getRole();
+
+            userDetail.get().getListOfRole().forEach(role -> {
+                Role role1 = new Role();
+                role1.setRoleName(role.getRoleName());
                 roles.add(role);
             });
+
             return new org.springframework.security.core.userdetails
                     .User(userDetail.get().getName(), userDetail.get().getPassword(), getAuthority(roles));
         }
@@ -186,9 +168,4 @@ public class UserServieceImplements implements UserInterface {
         return authorities;
     }
 
-
-
-
 }
-
-

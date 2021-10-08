@@ -1,5 +1,6 @@
 package com.example.TransportManagement.dto;
 
+import com.example.TransportManagement.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,6 +21,8 @@ public class UserDTO {
 
     private int isDelete;
 
-    private List<RoleDto> roles;
+    private String roleName;
+
+    private List<Role> roles;
 
 }
